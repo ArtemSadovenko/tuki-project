@@ -48,7 +48,7 @@ export class ImageSearchComponent {
     this.isLoading = true;
     this.images = [];
 
-    this.http.post<ImageDTO[]>('http://localhost:8500/api/v1/image/search', tags)
+    this.http.post<ImageDTO[]>('http://13.60.206.1:8500/api/v1/image/search', tags)
       .subscribe({
         next: (res) => {
           this.images = res;
@@ -104,7 +104,7 @@ export class ImageSearchComponent {
     const formData = new FormData();
     formData.append('file', uploadItem.file);
 
-    this.http.post('http://localhost:8500/api/v1/image', formData, {
+    this.http.post('http://13.60.206.1:8500/api/v1/image', formData, {
       reportProgress: true,
       observe: 'events'
     }).subscribe({
