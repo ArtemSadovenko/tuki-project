@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: tuki-postgres
+    restart: always
+    environment:
+      POSTGRES_DB: tuki_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./db/tuki.sql:/docker-entrypoint-initdb.d/tuki.sql
+    networks:
+      - app-net
+
+  backend:
+    build: ./tuki-test
+    container_name: backend
+    depends_on:
+      - postgres
+    ports:
+      - "8500:8500"
+    networks:
+      - app-net
+
+  frontend:
+    build: ./tuki-front/my-angular-app
+    container_name: frontend
+    ports:
+      - "4200:80"
+    networks:
+      - app-net
+
+networks:
+  app-net:
+    driver: bridge

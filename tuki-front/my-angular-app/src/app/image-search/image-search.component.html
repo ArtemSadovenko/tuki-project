@@ -1,0 +1,62 @@
+<div class="page-container">
+  <div class="header">
+    <h1>Image Gallery</h1>
+    <p>Upload and discover beautiful images by searching with tags</p>
+  </div>
+
+  <div class="upload-section">
+    <div class="upload-area" (click)="fileInput.click()">
+      <div class="upload-icon">📷</div>
+      <h3>Upload Images</h3>
+      <p>Click to browse</p>
+      <p class="upload-info">Supports: JPG, PNG, GIF (Max 10MB each)</p>
+    </div>
+
+    <input #fileInput type="file" multiple accept="image/*" (change)="onFileSelected($event)" style="display: none;">
+  </div>
+
+  <div class="upload-progress" *ngIf="uploadingFiles.length > 0">
+    <div *ngFor="let upload of uploadingFiles" class="upload-item">
+      <div class="upload-item-info">
+        <span class="upload-filename">{{ upload.fileName }}</span>
+        <span class="upload-status" [ngClass]="upload.status">{{ upload.status }}</span>
+      </div>
+      <div class="progress-bar" *ngIf="upload.status === 'uploading'">
+        <div class="progress-fill" [style.width.%]="upload.progress"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="search-container">
+    <div class="search-input-wrapper">
+      <input class="search-input" [(ngModel)]="searchValue" placeholder="Enter tags like: dog, cute, nature..."
+        (keyup.enter)="onSearch()" />
+    </div>
+    <button class="search-button" (click)="onSearch()">
+      Search
+    </button>
+  </div>
+
+  <div class="loading" *ngIf="isLoading">
+    <div class="spinner"></div>
+  </div>
+
+  <div class="image-gallery" *ngIf="images.length > 0 && !isLoading">
+    <div *ngFor="let img of images" class="image-card">
+      <div class="image-wrapper">
+        <img [src]="'data:' + img.contentType + ';base64,' + img.base64Data" [alt]="img.fileName"
+          (error)="onImageError($event)" />
+      </div>
+      <div class="image-info">
+        <div class="image-title">{{ img.fileName }}</div>
+        <div class="tags-container">
+          <span *ngFor="let tag of img.tags" class="tag">{{ tag }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="no-results" *ngIf="images.length === 0 && searchValue && !isLoading">
+    <p>No images found for your search. Try different tags!</p>
+  </div>
+</div>
